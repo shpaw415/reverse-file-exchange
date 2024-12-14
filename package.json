@@ -1,0 +1,17 @@
+{
+  "name": "communication-server",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "serve": "./server/index.ts"
+  },
+  "dependencies": {
+    "commander": "^12.1.0"
+  }
+}
