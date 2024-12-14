@@ -1,15 +1,9 @@
 # communication-server
 
-To install dependencies:
+Set .env
 
-```bash
-bun install
-```
+- PORT : ex: 4444
+- ADDR : your hostname ex: https://my-host.com:4444
+- ACCESS_KEY : a security key for securing your server change it!
 
-To run:
-
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.1.38. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+send client in the out directory to the target and add it to $PATH
