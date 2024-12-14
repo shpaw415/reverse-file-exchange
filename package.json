@@ -9,7 +9,8 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "serve": "./server/index.ts"
+    "serve": "./index.ts",
+    "build": "bash ./build.sh"
   },
   "dependencies": {
     "commander": "^12.1.0"
