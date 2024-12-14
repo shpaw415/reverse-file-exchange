@@ -1,5 +1,9 @@
 # communication-server
 
+### Usage
+
+Clone this repo
+
 Set .env
 
 - PORT : ex: 4444
