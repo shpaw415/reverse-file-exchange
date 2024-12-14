@@ -7,9 +7,10 @@ function Serve() {
         maxRequestBodySize: 1024 * 1024 * 2000,
         async fetch(request, server) {
             const header = request.headers;
+            if (request.url.endsWith("/client")) return new Response(Bun.file("out/client"));
             if (!ConfirmAccessKey(header)) return new Response("missing access-key");
             return MakeAction(request);
-        },
+        }
     });
 }
 

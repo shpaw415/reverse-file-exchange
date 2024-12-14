@@ -6,4 +6,18 @@ Set .env
 - ADDR : your hostname ex: https://my-host.com:4444
 - ACCESS_KEY : a security key for securing your server change it!
 
-send client in the out directory to the target and add it to $PATH
+Run
+
+```Bash
+#!/usr/bin/env bash
+bun run build
+```
+
+from target upload the client from https://my-host:4444/client
+
+```Bash
+#!/usr/bin/env bash
+curl --output client https://my-host:4444/client
+```
+
+then add it to $PATH

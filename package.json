@@ -9,7 +9,7 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "serve": "./index.ts",
+    "serve": "bun index.ts",
     "build": "bash ./build.sh"
   },
   "dependencies": {
