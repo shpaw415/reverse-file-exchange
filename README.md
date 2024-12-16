@@ -18,6 +18,7 @@ Run
 
 ```Bash
 #!/usr/bin/env bash
+bun i
 bun build:client
 bun serve
 ```
