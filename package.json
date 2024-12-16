@@ -3,16 +3,18 @@
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/tar-fs": "^2.0.4"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "scripts": {
     "serve": "bun index.ts",
-    "build": "bash ./build.sh"
+    "build:client": "bun build ./client/index.ts --production --compile --outfile ./out/client"
   },
   "dependencies": {
-    "commander": "^12.1.0"
+    "commander": "^12.1.0",
+    "tar-fs": "^3.0.6"
   }
 }

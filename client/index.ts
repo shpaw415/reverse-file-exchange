@@ -1,9 +1,15 @@
 import { program } from "commander";
 import type { ActionType } from "../types";
-import { normalize } from 'path';
+import { lstatSync, createWriteStream, rmSync } from "fs";
+import tar from "tar-fs";
+import type { optionTypes, UpType } from "./types";
+import { randomString } from "../utils";
+import type { BunFile } from "bun";
 
 const accessKey = process.env.ACCESS_KEY as string;
 const ServerAddr = process.env.ADDR as string;
+
+const cleanUps: Array<Function> = [];
 
 if (!accessKey || !ServerAddr)
     CloseWithMessage({
@@ -11,12 +17,6 @@ if (!accessKey || !ServerAddr)
         ServerAddr,
         message: "not correcly set"
     });
-
-type optionTypes = Partial<{
-    upload: string,
-    download: string,
-    test: void
-}>;
 
 program
     .option("-u, --upload <FilePath>", "Upload file to Server")
@@ -29,7 +29,7 @@ const header = {
     "access-key": accessKey
 };
 
-for (const key of Object.keys(options) as Array<keyof optionTypes>) {
+for await (const key of Object.keys(options) as Array<keyof optionTypes>) {
     let formData: FormData;
     switch (key) {
         case "download":
@@ -51,8 +51,12 @@ for (const key of Object.keys(options) as Array<keyof optionTypes>) {
             break;
         case "upload":
             formData = new FormData();
+            const fileWithType = await PrepareUpload();
+
             formData.append("action-type", "file-upload" as ActionType);
-            formData.append("file", Bun.file(options.upload as string));
+            formData.append("file", fileWithType.file);
+            formData.append("upload-type", fileWithType.type);
+
             console.log("Status:", (await fetch(ServerAddr, {
                 method: "POST",
                 body: formData,
@@ -71,8 +75,32 @@ for (const key of Object.keys(options) as Array<keyof optionTypes>) {
     }
 }
 
+function PrepareUpload(): Promise<UpType> | UpType {
+    const filePath = options.upload as string;
+    const state = lstatSync(filePath);
+    const name = `tmp-${randomString(5)}.tar`;
+    if (state.isDirectory()) {
+        cleanUps.push(() => rmSync(name));
+        return new Promise<UpType>((resolve) => {
+            const stream = tar.pack(filePath).pipe(createWriteStream(name));
+            stream.on("finish", () => {
+                const f = Bun.file(name);
+                resolve({ type: "dir", file: f });
+            });
+        });
+    }
+    return { file: Bun.file(filePath), type: "file" };
+}
+
+
+
 
 function CloseWithMessage(message: any) {
     console.log(message);
     process.exit(1);
 }
+
+/**
+ * cleanup when finished
+ */
+for await (const func of cleanUps) await func();
