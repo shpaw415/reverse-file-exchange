@@ -5,7 +5,6 @@ import type { optionTypes } from "./client/types";
 import { rm, rmSync } from "fs";
 
 const clientPath = "out/client";
-const UploadPath = "./upload";
 
 function Spawn(arg: optionTypes) {
     const argsParsed = (Object.keys(arg) as Array<keyof optionTypes>).map((e) => [`--${e}`, arg[e] || ""]).reduce((p, n) => [...p, ...n], []) as string[];
